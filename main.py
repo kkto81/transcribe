@@ -14,6 +14,7 @@ import os
 import sys
 import time
 import requests
+import pyperclip
 
 from services.AWSService import AWSService
 from services.OpenAIService import OpenAIService
@@ -65,7 +66,7 @@ class MainWindow(QMainWindow):
         self.setCentralWidget(self.widget)
 
         self.file_name = None
-        self.bucket_name = "kkto81-temp-audio"
+        self.bucket_name = "newspicks-cx-transcribe"
         self.aws_service = AWSService(self.bucket_name)
         self.openai_service = OpenAIService()
 
@@ -127,8 +128,13 @@ class MainWindow(QMainWindow):
                 corrected_output = parser.get_corrected_transcript(self.openai_service)
                 clear_message()
                 show_message(corrected_output)
+                pyperclip.copy(corrected_output)
+                self.aws_service.delete_transcription_job(job_name)
+                self.aws_service.delete_from_s3(self.file_name)
             else:
                 show_message("Transcription Failed")
+                self.aws_service.delete_transcription_job(job_name)
+                self.aws_service.delete_from_s3(self.file_name)
 
 
 def main():

@@ -4,7 +4,6 @@ class TranscriptParser:
 
     def parse_transcript(self):
         items = self.transcript_json["results"]["items"]
-
         speaking_segments = []
         last_speaker = None
         for item in items:
@@ -40,6 +39,8 @@ class TranscriptParser:
         transcript = self.parse_transcript()
 
         # Correct the transcript using OpenAI
-        corrected_transcript = openai_service.correct_text(transcript)
+        # corrected_transcript = openai_service.correct_text(transcript)
+        # TODO: OpenAIのAPIを使わないようにする、社内方針待ち
+        corrected_transcript = transcript
 
         return corrected_transcript
